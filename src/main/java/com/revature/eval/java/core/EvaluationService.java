@@ -1,8 +1,14 @@
 package com.revature.eval.java.core;
 
+import java.security.KeyStore.Entry;
 import java.time.temporal.Temporal;
+import java.time.temporal.TemporalAccessor;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 public class EvaluationService {
 
@@ -31,8 +37,19 @@ public class EvaluationService {
 	 */
 	public String acronym(String phrase) {
 		// TODO Write an implementation for this method declaration
+		String result = "";
+		String str;
+		result += str.charAt(0);
+		for(int i=0; i<str.length(); i++) {
+			if(Character.isWhitespace(str.charAt(i))) {
+				result = result + str.charAt(i);
+				result += str.charAt(i+1);
+			}
+		}
+		return result.replaceAll("\\s+", "").toUpperCase();
+	}	
 		return null;
-	}
+
 
 	/**
 	 * 3. Determine if a triangle is equilateral, isosceles, or scalene. An
@@ -47,6 +64,7 @@ public class EvaluationService {
 		private double sideOne;
 		private double sideTwo;
 		private double sideThree;
+		private String string;
 
 		public Triangle() {
 			super();
@@ -85,19 +103,29 @@ public class EvaluationService {
 
 		public boolean isEquilateral() {
 			// TODO Write an implementation for this method declaration
+			if (sideOne == sideTwo && sideTwo == sideThree) {
+				return true;
+			}else {
+				
 			return false;
+		}
 		}
 
 		public boolean isIsosceles() {
 			// TODO Write an implementation for this method declaration
+			if (sideOne == sideTwo || sideOne == sideThree || sideTwo == sideThree) {
+				return true; 
+			} else {
 			return false;
+		}
 		}
 
 		public boolean isScalene() {
 			// TODO Write an implementation for this method declaration
-			return false;
-		}
-
+			if (sideOne != sideTwo && sideTwo != sideThree && sideOne != sideThree) {
+				return true;}
+			else {
+				return false; }
 	}
 
 	/**
@@ -117,7 +145,28 @@ public class EvaluationService {
 	 */
 	public int getScrabbleScore(String string) {
 		// TODO Write an implementation for this method declaration
-		return 0;
+		int score = 0;
+		for(int i = 0; i < string.length(); i++) {
+			char LetterScore = string.charAt(i);
+			switch(LetterScore) {
+			case 'A': case 'E': case 'I': case 'O': case 'U': case 'L': case 'N': case 'R': case 'S': case 'T':
+				score += 1;
+			case 'D': case 'G':
+				score += 2;
+			case 'B': case 'C': case 'M': case 'P':
+				score += 3;
+			case 'F': case 'H': case 'V': case 'W': case 'Y':
+				score += 4;
+			case 'K':
+				score += 5;
+			case 'J': case 'X':
+				score += 8;
+			case 'Q': case 'Z':
+				score += 10;
+				break;
+			}
+		}
+			return 0;
 	}
 
 	/**
@@ -153,7 +202,9 @@ public class EvaluationService {
 	 */
 	public String cleanPhoneNumber(String string) {
 		// TODO Write an implementation for this method declaration
-		return null;
+		String str = "";
+		str.replaceAll("\\p{Punct}","");
+		System.out.println(str);
 	}
 
 	/**
@@ -167,6 +218,18 @@ public class EvaluationService {
 	 */
 	public Map<String, Integer> wordCount(String string) {
 		// TODO Write an implementation for this method declaration
+		String str = "My name name is is Juliana";
+		int count = 0;
+		String str2 [] = str.split("\\s+");
+		HashMap<String, Integer> wordCount = new HashMap<>();
+		for(int i=0; i<str2.length; i++) {
+			String key = str2[i];
+			int howMany = wordCount.getOrDefault(key, 0); //check for the key or get the default if any
+			wordCount.put(key, ++howMany);
+		}
+		for (java.util.Map.Entry<String, Integer> result: wordCount.entrySet()) {
+			System.out.println(result.getKey()+ " " + result.getValue());
+		}
 		return null;
 	}
 
@@ -242,13 +305,41 @@ public class EvaluationService {
 	 * 
 	 * See http://en.wikipedia.org/wiki/Pig_latin for more details.
 	 * 
+	 * B,C,D,F,G,H,J,K,L,M,N,P,Q,R,S,T,V,W,X,Y,Z
+	 * 
+	 * A,E,I,O,U,
+	 * 
 	 * @param string
 	 * @return
 	 */
 	public String toPigLatin(String string) {
 		// TODO Write an implementation for this method declaration
-		return null;
+		String translate = "pig";
+		int pos = -1;
+		char ch;
+		List<String> str = Arrays.asList(translate.split(" "));
+		for(int i = 0; i<translate.length();i++) {
+			ch = translate.charAt(i);
+			if(vowelCheck(ch)) {
+				pos = i;
+			}
+		} if (pos == 0) {
+			return translate + "ay";
+		}
+		else {
+			String one = translate.substring(pos);
+			String two = translate.substring(0, pos);
+			return one + two + "ay";
+		} 
+		public static boolean vowelCheck(char ch) {
+			if (ch == 'A' || ch == 'E' || ch == 'I' || ch == 'O' || ch == 'U') {
+				return true;
+			} else {
+				return false;
+			}
+		}
 	}
+		return null;
 
 	/**
 	 * 9. An Armstrong number is a number that is the sum of its own digits each
@@ -267,6 +358,17 @@ public class EvaluationService {
 	 */
 	public boolean isArmstrongNumber(int input) {
 		// TODO Write an implementation for this method declaration
+		int num1 = 153, num, temp;
+		int result = 0;
+		num = num1;
+		while (num != 0) {
+			temp = num % 10;
+			result += Math.pow(temp, 3);
+			num /= 10;			
+		}
+		if (result == num1) {
+			return true;
+		}
 		return false;
 	}
 
@@ -280,9 +382,16 @@ public class EvaluationService {
 	 * @param l
 	 * @return
 	 */
-	public List<Long> calculatePrimeFactorsOf(long l) {
+		{
 		// TODO Write an implementation for this method declaration
-		return null;
+		List<Long> factors = new ArrayList<>(); 
+		for(long i = 2; i<= l; i++) {
+			while (l % i == 0) {
+				factors.add(i);
+				l /= i;
+			}
+		}
+		return factors;
 	}
 
 	/**
@@ -340,7 +449,19 @@ public class EvaluationService {
 	 */
 	public int calculateNthPrime(int i) {
 		// TODO Write an implementation for this method declaration
-		return 0;
+		int num=1, count=0
+		int nth;
+		while(count < nth) {
+			num += 1;
+			for(i = 2; i <= num; i++)
+				if (num % i == 0) {
+					break;
+				}
+		}
+		if(i == num) {
+			count += 1;
+		}
+		return num;
 	}
 
 	/**
@@ -416,8 +537,28 @@ public class EvaluationService {
 	 */
 	public boolean isValidIsbn(String string) {
 		// TODO Write an implementation for this method declaration
+		int num = string.length();
+		if(num != 10) {
 		return false;
-	}
+		}
+		int sum = 0;
+		for(int i = 0; i < 9; i++) {
+			int isbn = string.charAt[i] - '0';
+			if (0 > isbn || 9 < isbn)
+				return false;
+			sum += (isbn * (10 - i))
+		}
+		char lastNum = string.charAt[9];
+		if(lastNum != 'X' && (lastNum < '0' || lastNum > '9'))
+			return false;
+		if(lastNum == 'X')
+			sum += 10;
+		else {
+			sum += lastNum - '0';
+		}
+			return (sum % 11 == 0);
+			
+		}
 
 	/**
 	 * 16. Determine if a sentence is a pangram. A pangram (Greek: παν γράμμα, pan
@@ -434,6 +575,20 @@ public class EvaluationService {
 	 */
 	public boolean isPangram(String string) {
 		// TODO Write an implementation for this method declaration
+		String str = "";
+		int i = 0;
+		for(char c : str.toCharArray()) {
+			int x = Character.toUpperCase(c);
+			if(x >= 'A' && x <= 'Z') {
+				i |= 1 << (x - 'A');
+			}
+		}
+		if(i == (1 << (1 + 'Z' -'A'))- 1) {
+			System.out.println("It is a pangram");
+		}
+		else {
+			System.out.println("This is not a pangram");
+		}
 		return false;
 	}
 
@@ -465,6 +620,12 @@ public class EvaluationService {
 	 */
 	public int getSumOfMultiples(int i, int[] set) {
 		// TODO Write an implementation for this method declaration
+		int sum = 0;
+		for(int j = 0; j < i; j++) {
+			
+			}
+		}
+		
 		return 0;
 	}
 
@@ -538,7 +699,32 @@ public class EvaluationService {
 	 */
 	public int solveWordProblem(String string) {
 		// TODO Write an implementation for this method declaration
+		char [] ch = string.toCharArray();
+		Stack<Integer> numbers = new Stack<Integer>();
+		Stack<String> ops = new Stack<String>();
+		int ans = 0, num1, num2;
+		
+		for(int i=0; i < ch.length; i++) {
+			if(ch[i] == ' ') 
+				continue;
+			if(ch[i] >= '0' && ch[i] <= '9')
+			{	StringBuffer sbuf = new StringBuffer();
+			while (i < ch.length() && ch[i] >= '0' && ch[i] <= '9')
+				sbuf.append(ch[i++]);
+			numbers.push(Integer.parseInt(sbuf.toString()));
+				i--;
+			}
+			else if {
+				(ch[i] == 'add' || ch[i] == 'minus' || ch[i] == 'divided' || ch[i] == 'mutliplied')
+				switch(ops) {
+				case 'add':
+					ans += 
+					
+				}
+				ops.push()
+			}
+			}
+		}
+		
 		return 0;
 	}
-
-}
